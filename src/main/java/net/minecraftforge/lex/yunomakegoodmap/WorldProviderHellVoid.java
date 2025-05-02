@@ -1,8 +1,5 @@
 package net.minecraftforge.lex.yunomakegoodmap;
 
-import java.lang.reflect.Field;
-
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderHell;
@@ -10,7 +7,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderHell;
-import net.minecraft.world.gen.MapGenBase;
 
 public class WorldProviderHellVoid extends WorldProviderHell
 {
@@ -25,14 +21,11 @@ public class WorldProviderHellVoid extends WorldProviderHell
     public static class ChunkProviderHellVoid extends ChunkProviderHell
     {
         private World world;
-        private Field genWorldF;
 
         public ChunkProviderHellVoid(World world, long seed)
         {
             super(world, seed);
             this.world = world;
-            genWorldF = ReflectionHelper.findField(MapGenBase.class, "field_75039_c", "worldObj");
-            genWorldF.setAccessible(true);
         }
 
         @Override public Chunk loadChunk(int x, int z){ return this.provideChunk(x, z); }
@@ -60,16 +53,7 @@ public class WorldProviderHellVoid extends WorldProviderHell
             if (YUNoMakeGoodMap.instance.shouldGenerateNetherFortress(world))
                 genNetherBridge.func_151539_a(this, world, x, z, data);
             else
-            {
-                try
-                {
-                    genWorldF.set(genNetherBridge, world);
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException("Failed to set world object, either enable nether fortres gen or find a fix:", e);
-                }
-            }
+                genNetherBridge.worldObj = world;
 
             Chunk ret = new Chunk(world, data, x, z);
             BiomeGenBase[] biomes = world.getWorldChunkManager().loadBlockGeneratorData(null, x * 16, z * 16, 16, 16);
