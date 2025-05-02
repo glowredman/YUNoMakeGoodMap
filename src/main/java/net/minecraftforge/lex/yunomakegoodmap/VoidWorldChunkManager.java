@@ -5,6 +5,7 @@ import java.util.Random;
 
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraftforge.lex.yunomakegoodmap.generators.IPlatformGenerator;
 import cpw.mods.fml.common.FMLLog;
@@ -20,7 +21,7 @@ public class VoidWorldChunkManager extends WorldChunkManager
     }
 
     @Override
-    public ChunkPosition findBiomePosition(int x, int z, int range, @SuppressWarnings("rawtypes") List biomes, Random rand)
+    public ChunkPosition findBiomePosition(int x, int z, int range, List<BiomeGenBase> biomes, Random rand)
     {
         ChunkPosition ret = super.findBiomePosition(x, z, range, biomes, rand);
         if (x == 0 && z == 0 && !world.getWorldInfo().isInitialized())
